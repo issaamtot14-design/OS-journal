@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Operating Systems Technical Journal</title>
+</head>
+<body>
+
+<h1>Operating Systems Technical Journal</h1>
+
+<p><strong>Student:</strong> Your Name<br>
+<strong>Student ID:</strong> Your ID<br>
+<strong>Module:</strong> CMPN202 – Operating Systems</p>
+
+<h2>Overview</h2>
+<p>
+This GitHub Pages site documents my technical journal across all 7 weeks of the Operating Systems coursework.
+</p>
+
+<h2>Weekly Sections</h2>
+<ul>
+  <li>Week 1 – System Planning & Architecture</li>
+  <li>Week 2 – Security Planning & Threat Modelling</li>
+  <li>Week 3 – Application Selection & Monitoring Strategy</li>
+  <li>Week 4 – Initial Security Configuration</li>
+  <li>Week 5 – Advanced Security & Monitoring</li>
+  <li>Week 6 – Performance Evaluation & Optimisation</li>
+  <li>Week 7 – Security Audit & System Evaluation</li>
+</ul>
+
+</body>
+</html>
