@@ -1,1 +1,17 @@
-# Test page
+# Operating Systems Technical Journal
+
+**Student:** [Your Name]  
+**Student ID:** [Your ID]  
+**Module:** CMPN202 – Operating Systems  
+
+## Overview
+This GitHub Pages site documents my technical journal across all 7 weeks of the Operating Systems coursework. It covers system planning, security implementation, performance testing, optimisation, and final security auditing.
+
+## Weekly Sections
+- Week 1 – System Planning & Architecture
+- Week 2 – Security Planning & Threat Modelling
+- Week 3 – Application Selection & Monitoring Strategy
+- Week 4 – Initial Security Configuration
+- Week 5 – Advanced Security & Monitoring
+- Week 6 – Performance Evaluation & Optimisation
+- Week 7 – Security Audit & System Evaluation
