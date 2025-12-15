@@ -3,27 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <title>Week 4 – Initial Security Configuration</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 0 16px; line-height: 1.6; color: #111; background: #fff; }
+    img { max-width: 100%; height: auto; display: block; margin: 10px 0; }
+    figure { margin: 24px 0; }
+    figcaption { font-size: 0.95em; color: #333; }
+    a { color: #0645ad; }
+    code { background: #f2f2f2; padding: 2px 4px; border-radius: 4px; }
+  </style>
 </head>
 <body>
 
-<h1>Week 4 – Initial Security Configuration</h1>
+  <a href="index.html">← Back to Home</a>
 
-<p>
-This week involved deploying the server and implementing foundational security controls.
-</p>
+  <h1>Week 4 – Initial Security Configuration</h1>
 
-<h2>Security Controls Implemented</h2>
-<ul>
-  <li>SSH key-based authentication</li>
-  <li>Firewall configuration</li>
-  <li>User and privilege management</li>
-</ul>
+  <p>
+    Week 4 focused on initial security configuration, specifically setting up secure remote administration
+    using SSH and hardening the default configuration. The goal was to ensure the VM could be managed remotely
+    while reducing common attack vectors such as direct root login and password-based brute force attempts.
+  </p>
 
-<p>
-<!-- Paste your Week 4 written content and configuration evidence here -->
-</p>
+  <h2>What I did</h2>
+  <ul>
+    <li>Created/validated a non-root admin user and ensured it had sudo permissions for administrative tasks.</li>
+    <li>Generated an SSH key pair on the workstation and transferred the public key to the VM.</li>
+    <li>Configured key-based authentication by adding the public key to <code>~/.ssh/authorized_keys</code>.</li>
+    <li>Hardened the SSH server configuration by disabling direct root login and disabling password / keyboard-interactive authentication.</li>
+    <li>Validated remote access by connecting from the workstation to the VM over SSH.</li>
+    <li>Enabled the firewall and restricted SSH access to the workstation IP only to minimise exposure.</li>
+  </ul>
 
-<p><a href="index.html">← Back to Home</a></p>
+  <h2>Why these changes matter</h2>
+  <ul>
+    <li><strong>Disable root login:</strong> prevents direct privileged access over the network.</li>
+    <li><strong>Disable password & keyboard-interactive login:</strong> reduces risk of brute-force attacks.</li>
+    <li><strong>Enable key-based authentication:</strong> stronger authentication and easier auditing.</li>
+    <li><strong>Firewall SSH restriction:</strong> limits who can attempt to connect in the first place.</li>
+  </ul>
+
+  <p>
+    The screenshots below provide evidence of the key configuration steps: user privilege setup, SSH key creation
+    and installation, successful remote login, before/after SSH hardening settings, and firewall status.
+  </p>
+
+  <h2>Evidence Screenshots</h2>
+
+  <figure>
+    <img src="images/week4/admin_user.png" alt="Admin user and sudo group evidence">
+    <figcaption>Non-root admin user privilege configuration (adding user to sudo group and verifying group membership).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week4/Key_Created.png" alt="SSH key created on workstation">
+    <figcaption>SSH key pair created on the workstation (public/private key generation).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week4/Install_key.png" alt="Public key transferred to VM">
+    <figcaption>Public key transferred from workstation to VM (key deployment step before adding to authorized_keys).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week4/SSH_First_login.png" alt="First SSH login from workstation">
+    <figcaption>Successful SSH connection from the workstation to the VM (remote administration confirmed).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week4/settingst_table.png" alt="SSH hardening settings table">
+    <figcaption>SSH hardening configuration summary (old values vs new values and purpose).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week4/before_after.png" alt="Before and after sshd_config hardening">
+    <figcaption>Before/after view of <code>/etc/ssh/sshd_config</code> showing hardening changes (root login disabled, password auth disabled, key auth enabled).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week4/ufw_enable.png" alt="UFW enabled with SSH restriction">
+    <figcaption>Firewall enabled and SSH restricted to the workstation IP (reducing the attack surface).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week4/whoami.png" alt="Host identity and SSH service status">
+    <figcaption>System identity checks (hostname/whoami/uptime) and SSH service validation on the VM.</figcaption>
+  </figure>
 
 </body>
 </html>
