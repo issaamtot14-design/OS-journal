@@ -6,26 +6,56 @@
 </head>
 <body>
 
-<h1>Week 3 – Application Selection & Monitoring</h1>
+  <a href="index.html">← Back to Home</a>
 
-<p>
-This week focused on selecting representative workloads and defining monitoring strategies.
-</p>
+  <h1>Week 3 – Application Selection & Monitoring</h1>
 
-<h2>Selected Workloads</h2>
-<ul>
-  <li>CPU-intensive application</li>
-  <li>Memory-intensive application</li>
-  <li>Disk I/O workload</li>
-  <li>Network workload</li>
-  <li>Server application</li>
-</ul>
+  <p>
+    Week 3 focused on selecting representative applications for performance evaluation across CPU, memory,
+    disk I/O, network, and server workloads. I produced an application selection matrix with justifications,
+    documented SSH-based installation commands, defined expected resource profiles, and planned a monitoring
+    strategy to collect consistent measurements during later tests.
+  </p>
 
-<p>
-<!-- Paste your Week 3 written content here -->
-</p>
+  <h2>Key Activities</h2>
+  <ul>
+    <li>Selected workload tools: sysbench (CPU), stress-ng (memory), dd (disk I/O), iperf3 (network), Apache + siege (HTTP/server)</li>
+    <li>Documented installations performed via SSH from the workstation</li>
+    <li>Defined expected resource profiles per workload type</li>
+    <li>Mapped monitoring tools and metrics to each workload</li>
+  </ul>
 
-<p><a href="index.html">← Back to Home</a></p>
+  <h2>Evidence Screenshots</h2>
+
+  <figure>
+    <img src="images/week3/wk3_matrix.png" alt="Application selection matrix">
+    <figcaption>Application selection matrix (workload type → tool selected → reason/justification).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week3/wk3_install_doc.png" alt="SSH-based installation documentation">
+    <figcaption>SSH-based installation documentation showing the exact commands used to install each tool.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week3/wk3_expected_profiles.png" alt="Expected resource profiles">
+    <figcaption>Expected resource profiles (CPU/RAM/Disk/Network/Notes) for each selected workload.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week3/wk3_monitoring_metrics.png" alt="Monitoring tools and metrics observed">
+    <figcaption>Monitoring strategy: which monitoring tools were used per workload and which metrics were observed.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week3/sysbenchisntall.png" alt="Sysbench installation output">
+    <figcaption>Terminal evidence showing sysbench installation status on the VM.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week3/top.png" alt="Sysbench run with top monitoring">
+    <figcaption>Example workload execution (sysbench CPU) with monitoring output (top) during the run.</figcaption>
+  </figure>
 
 </body>
 </html>
