@@ -1,31 +1,376 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Week 6 – Performance Evaluation & Optimisation</title>
-</head>
-<body>
+<!-- ===================== WEEK 6 CONTENT START ===================== -->
 
-<h1>Week 6 – Performance Evaluation & Optimisation</h1>
+<section id="week6-overview">
+  <h2>Week 6 – Performance Evaluation & Analysis</h2>
+  <p>
+    This week focused on measuring how the operating system behaves under different workload types
+    (CPU, memory, disk I/O, network, latency, and service response time). A baseline was captured first,
+    then each workload was tested and monitored, and finally two optimisations were implemented and
+    evidenced with quantitative improvements.
+  </p>
 
-<p>
-This week evaluated system performance under different workloads and analysed optimisation opportunities.
-</p>
+  <h3>Objectives</h3>
+  <ul>
+    <li>Collect baseline metrics (idle/normal state) for comparison</li>
+    <li>Run workload-specific performance tests and observe OS behaviour</li>
+    <li>Record results in a structured performance table</li>
+    <li>Create charts/graphs to visualise key performance differences</li>
+    <li>Carry out network performance analysis (throughput + latency)</li>
+    <li>Implement and evidence at least two optimisations with measurable impact</li>
+  </ul>
+</section>
 
-<h2>Tests Performed</h2>
-<ul>
-  <li>CPU stress testing</li>
-  <li>Memory usage testing</li>
-  <li>Disk I/O performance testing</li>
-  <li>Network throughput testing</li>
-  <li>Service response time testing</li>
-</ul>
+<hr />
 
-<p>
-<!-- Paste your Week 6 test results, analysis, and optimisation discussion here -->
-</p>
+<section id="week6-baseline">
+  <h3>1) Baseline monitoring (before stress testing)</h3>
+  <p>
+    Before applying load, I captured baseline system activity to establish a “normal” reference point.
+    This baseline is used to compare how CPU, memory, disk, and network behaviour changes under load.
+  </p>
 
-<p><a href="index.html">← Back to Home</a></p>
+  <figure>
+    <img src="images/week6/topbnl.png" alt="Baseline system activity (top output)" />
+    <figcaption><strong>Evidence W6-B1:</strong> Baseline CPU/process activity (top).</figcaption>
+  </figure>
 
-</body>
-</html>
+  <figure>
+    <img src="images/week6/ip-slink.png" alt="ip -s link output (network statistics baseline)" />
+    <figcaption><strong>Evidence W6-B2:</strong> Network interface statistics baseline (ip -s link).</figcaption>
+  </figure>
+</section>
+
+<hr />
+
+<section id="week6-cpu">
+  <h3>2) CPU performance test (sysbench)</h3>
+  <p>
+    The CPU workload was tested using <code>sysbench cpu</code> to generate predictable multi-threaded CPU load.
+    During this test, CPU utilisation increased significantly while RAM, disk, and network stayed stable, confirming
+    the workload was CPU-bound and demonstrating the OS scheduler handling concurrent threads.
+  </p>
+
+  <figure>
+    <img src="images/week6/cputtest.png" alt="CPU test evidence screenshot" />
+    <figcaption><strong>Evidence W6-CPU:</strong> CPU stress / monitoring during sysbench CPU test.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week6/sysbenchthroughput.png" alt="Sysbench CPU throughput chart" />
+    <figcaption><strong>Chart W6-C1:</strong> Sysbench CPU throughput (events/sec) visualisation.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Command:</strong> <code>sysbench cpu --threads=4 --time=30 run</code></li>
+    <li><strong>Key result:</strong> ~14098 events/sec</li>
+    <li><strong>Average latency:</strong> ~0.28 ms</li>
+  </ul>
+</section>
+
+<hr />
+
+<section id="week6-memory">
+  <h3>3) Memory performance test (stress-ng / sysbench memory)</h3>
+  <p>
+    Memory load was generated to observe how the OS manages allocation pressure, paging behaviour, and overall responsiveness.
+    Under memory stress, RAM usage increased rapidly and returned to normal after completion, showing stable resource handling.
+  </p>
+
+  <figure>
+    <img src="images/week6/memorytest.png" alt="Memory test evidence screenshot" />
+    <figcaption><strong>Evidence W6-MEM:</strong> Memory load test and monitoring evidence.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Command (example):</strong> <code>stress-ng --vm 2 --vm-bytes 2G --timeout 20s</code></li>
+    <li><strong>Alternative:</strong> <code>sysbench memory run</code></li>
+  </ul>
+</section>
+
+<hr />
+
+<section id="week6-disk">
+  <h3>4) Disk I/O performance test (sysbench fileio / dd)</h3>
+  <p>
+    Disk performance was tested using file I/O workloads. Disk activity became the dominant resource,
+    while CPU stayed relatively low (typical I/O-bound behaviour). This demonstrates how storage throughput
+    and filesystem sync behaviour can become bottlenecks, especially in a VM environment.
+  </p>
+
+  <figure>
+    <img src="images/week6/disktest.png" alt="Disk test evidence screenshot" />
+    <figcaption><strong>Evidence W6-DISK:</strong> Disk I/O workload execution and monitoring evidence.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Command (example):</strong> <code>sysbench fileio --file-total-size=2G --file-test-mode=rndrw --time=30 run</code></li>
+    <li><strong>Alternative:</strong> <code>dd if=/dev/zero of=test.img bs=1M count=3000</code></li>
+    <li><strong>Key results:</strong> Read ~6.70 MiB/s, Write ~4.46 MiB/s</li>
+  </ul>
+</section>
+
+<hr />
+
+<section id="week6-network">
+  <h3>5) Network performance analysis (throughput + latency)</h3>
+
+  <h4>5.1 Throughput (iperf3)</h4>
+  <p>
+    Throughput testing was performed with iperf3 to measure bandwidth between the workstation and the VM.
+    Results showed stable transfer with moderate CPU usage and no packet loss, indicating the network path
+    was not a limiting factor for service tests.
+  </p>
+
+  <figure>
+    <img src="images/week6/iperftest.png" alt="iperf3 throughput test evidence screenshot" />
+    <figcaption><strong>Evidence W6-NET1:</strong> Network throughput test (iperf3).</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Server (VM):</strong> <code>iperf3 -s</code></li>
+    <li><strong>Client (workstation):</strong> <code>iperf3 -c &lt;server-ip&gt; -t 10</code></li>
+    <li><strong>Key result:</strong> ~535 Mbits/sec receiver bitrate</li>
+  </ul>
+
+  <h4>5.2 Latency (ping)</h4>
+  <p>
+    Latency was measured using ICMP ping. Low average latency and 0% packet loss indicates a stable local VM network,
+    which supports consistent load-testing results.
+  </p>
+
+  <figure>
+    <img src="images/week6/latency%20test.png" alt="Ping latency test evidence screenshot" />
+    <figcaption><strong>Evidence W6-NET2:</strong> Latency test (ping).</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Command:</strong> <code>ping -c 20 &lt;server-ip&gt;</code></li>
+    <li><strong>Results:</strong> Avg ~1 ms, Min 0 ms, Max 3 ms, Packet loss 0%</li>
+  </ul>
+</section>
+
+<hr />
+
+<section id="week6-service">
+  <h3>6) Service performance test (Apache + Siege)</h3>
+  <p>
+    Apache was used as the service workload, and Siege generated HTTP load at two concurrency levels (5 users vs 25 users).
+    As concurrency increased, Apache spawned additional workers and CPU activity rose; response time increased under heavier
+    load but availability remained stable with no failed requests.
+  </p>
+
+  <figure>
+    <img src="images/week6/serviceperformancetest.png" alt="Apache service running evidence screenshot" />
+    <figcaption><strong>Evidence W6-SVC1:</strong> Apache service status / validation (systemctl + curl).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week6/siegeuserstable.png" alt="Siege results table screenshot" />
+    <figcaption><strong>Evidence W6-SVC2:</strong> Siege summary results (5 users vs 25 users).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week6/siege25userresult.png" alt="Siege 25 users run output screenshot" />
+    <figcaption><strong>Evidence W6-SVC3:</strong> Siege 25 concurrent users run output.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Confirm service:</strong> <code>systemctl status apache2</code> and <code>curl http://localhost</code></li>
+    <li><strong>Low load:</strong> <code>siege -c 5 -t 30S http://localhost</code></li>
+    <li><strong>High load:</strong> <code>siege -c 25 -t 30S http://localhost</code></li>
+    <li><strong>Key results:</strong>
+      <ul>
+        <li>5 users: <strong>148.01 trans/s</strong>, avg response time <strong>0.01 s</strong></li>
+        <li>25 users: <strong>370.87 trans/s</strong>, avg response time <strong>0.07 s</strong></li>
+        <li>Availability: <strong>100%</strong> (no failed transactions)</li>
+      </ul>
+    </li>
+  </ul>
+
+  <figure>
+    <img src="images/week6/seige25vs5usergraph.png" alt="Graph comparing Siege 5 vs 25 users" />
+    <figcaption><strong>Chart W6-S1:</strong> Siege transaction rate comparison (5 vs 25 users).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week6/transactioratechart.png" alt="Siege transaction rate chart" />
+    <figcaption><strong>Chart W6-S2:</strong> Transaction rate visualisation (trans/s).</figcaption>
+  </figure>
+</section>
+
+<hr />
+
+<section id="week6-datatable">
+  <h3>7) Performance data table (structured results)</h3>
+  <p>
+    The table below consolidates the key measurements across all workloads and service tests.
+    This provides a single reference for comparison and later optimisation analysis.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Tool</th>
+        <th>Metric(s)</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>CPU</td>
+        <td>sysbench cpu</td>
+        <td>Events/sec, Avg latency</td>
+        <td>~14098 events/sec, ~0.28 ms</td>
+      </tr>
+      <tr>
+        <td>Memory</td>
+        <td>stress-ng / sysbench memory</td>
+        <td>RAM pressure behaviour</td>
+        <td>RAM usage increased under load; system remained responsive</td>
+      </tr>
+      <tr>
+        <td>Disk I/O</td>
+        <td>sysbench fileio / dd</td>
+        <td>Read/Write throughput</td>
+        <td>Read ~6.70 MiB/s, Write ~4.46 MiB/s</td>
+      </tr>
+      <tr>
+        <td>Network Throughput</td>
+        <td>iperf3</td>
+        <td>Receiver bitrate</td>
+        <td>~535 Mbits/sec</td>
+      </tr>
+      <tr>
+        <td>Network Latency</td>
+        <td>ping</td>
+        <td>Min/Avg/Max, Loss</td>
+        <td>Min 0 ms, Avg ~1 ms, Max 3 ms, Loss 0%</td>
+      </tr>
+      <tr>
+        <td>HTTP Service</td>
+        <td>siege</td>
+        <td>Transaction rate, Response time</td>
+        <td>
+          5 users: 148.01 trans/s, 0.01 s<br />
+          25 users: 370.87 trans/s, 0.07 s<br />
+          Availability: 100%
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr />
+
+<section id="week6-analysis">
+  <h3>8) Performance analysis (bottlenecks + OS behaviour)</h3>
+  <ul>
+    <li><strong>CPU test:</strong> CPU became the dominant resource; other subsystems stayed stable, indicating a clean CPU-bound workload and effective scheduling.</li>
+    <li><strong>Memory test:</strong> RAM usage increased rapidly under allocation pressure and returned after completion, demonstrating stable memory management under stress.</li>
+    <li><strong>Disk test:</strong> Disk I/O dominated while CPU stayed low, showing an I/O-bound workload where throughput and sync behaviour can become limiting (especially in a VM).</li>
+    <li><strong>Network tests:</strong> High throughput and low latency with 0% loss indicate a stable local network path and consistent conditions for service benchmarking.</li>
+    <li><strong>Web service:</strong> Increasing concurrency raised CPU usage and response time, but the service remained stable (100% availability), showing Apache handled scaling within test limits.</li>
+  </ul>
+</section>
+
+<hr />
+
+<section id="week6-optimisation">
+  <h3>9) Optimisation phase (two evidenced improvements)</h3>
+
+  <h4>Improvement 1: Apache optimisation (compression + caching modules)</h4>
+  <p>
+    I enabled Apache modules to improve efficiency and reduce overhead per request. This improved throughput and reduced response time
+    under the same 25-user Siege load.
+  </p>
+
+  <ul>
+    <li><strong>Commands:</strong></li>
+  </ul>
+  <pre><code>sudo a2enmod deflate
+sudo a2enmod headers
+sudo a2enmod expires
+sudo systemctl restart apache2</code></pre>
+
+  <figure>
+    <img src="images/week6/a2enmod25usersiegeresult.png" alt="a2enmod enable modules and siege result evidence screenshot" />
+    <figcaption><strong>Evidence W6-OPT1:</strong> Enabling modules + improved Siege result evidence.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Impact:</strong> Transaction rate increased from <strong>370.87</strong> → <strong>455.27 trans/s</strong> (+22.8%)</li>
+    <li><strong>Response time:</strong> improved from <strong>0.07 s</strong> → <strong>0.05 s</strong></li>
+  </ul>
+
+  <h4>Improvement 2: KeepAliveTimeout tuning</h4>
+  <p>
+    KeepAlive was tuned to reduce wasted time holding idle connections. This produced a small additional throughput gain while maintaining
+    stability (0 failed requests).
+  </p>
+
+  <ul>
+    <li><strong>Change:</strong> Set <code>KeepAliveTimeout 2</code> in <code>/etc/apache2/apache2.conf</code></li>
+  </ul>
+
+  <figure>
+    <img src="images/week6/keepalive2.png" alt="KeepAliveTimeout configuration evidence screenshot" />
+    <figcaption><strong>Evidence W6-OPT2:</strong> KeepAliveTimeout tuning evidence.</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Impact:</strong> Transaction rate increased from <strong>455.27</strong> → <strong>459.64 trans/s</strong></li>
+    <li><strong>Availability:</strong> remained <strong>100%</strong></li>
+  </ul>
+
+  <figure>
+    <img src="images/week6/fianloptimisationchart.png" alt="Final optimisation comparison chart" />
+    <figcaption><strong>Chart W6-O1:</strong> Baseline vs Improvement 1 vs Improvement 2 (transaction rate).</figcaption>
+  </figure>
+
+  <h4>Optimisation results summary</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Baseline</th>
+        <th>After Improvement 1</th>
+        <th>After Improvement 2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Transaction Rate (25 users)</td>
+        <td>370.87 trans/s</td>
+        <td>455.27 trans/s</td>
+        <td>459.64 trans/s</td>
+      </tr>
+      <tr>
+        <td>Average Response Time</td>
+        <td>0.07 s</td>
+        <td>0.05 s</td>
+        <td>0.05 s</td>
+      </tr>
+      <tr>
+        <td>Availability</td>
+        <td>100%</td>
+        <td>100%</td>
+        <td>100%</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr />
+
+<section id="week6-conclusion">
+  <h3>10) Week 6 conclusion</h3>
+  <p>
+    Week 6 completed an end-to-end performance evaluation across CPU, memory, disk I/O, network throughput, latency, and HTTP service load.
+    Results showed predictable OS behaviour under each workload type, stable service availability at higher concurrency, and measurable
+    improvements after two optimisations (overall throughput improved by ~23% compared to baseline). This prepares the system for the Week 7
+    security audit and final evaluation.
+  </p>
+</section>
+
+<!-- ===================== WEEK 6 CONTENT END ===================== -->
