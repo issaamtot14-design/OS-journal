@@ -2,30 +2,61 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Week 7 – Security Audit & System Evaluation</title>
+  <title>Week 7 – Hardening, Validation & Final Security Checks</title>
 </head>
 <body>
 
-<h1>Week 7 – Security Audit & System Evaluation</h1>
+<h1>Week 7 – Hardening, Validation & Final Security Checks</h1>
 
 <p>
-This final week focused on auditing the system security posture and evaluating the overall configuration.
+This week focused on validating the system’s security posture after implementing controls. I verified the firewall configuration,
+checked mandatory access control status, confirmed active services, and used auditing/scanning tools (Lynis, Nmap, and rkhunter)
+to identify remaining issues and confirm the attack surface was minimized.
 </p>
 
-<h2>Audit Activities</h2>
+<h2>Key Activities</h2>
 <ul>
-  <li>Lynis security audit</li>
-  <li>Nmap network scanning</li>
-  <li>Access control verification</li>
-  <li>Service audit</li>
-  <li>Firewall and SSH verification</li>
+  <li>Ran Lynis to audit the system and review warnings/suggestions</li>
+  <li>Validated exposed services using Nmap scanning</li>
+  <li>Confirmed firewall status and rules using UFW verbose output</li>
+  <li>Verified user/group permissions and least privilege configuration</li>
+  <li>Checked running/enabled services using systemctl</li>
+  <li>Validated AppArmor enforcement status</li>
+  <li>Performed a rootkit check using rkhunter</li>
 </ul>
 
-<p>
-<!-- Paste your Week 7 audit findings and risk evaluation here -->
-</p>
+<h2>Evidence Screenshots</h2>
 
-<p><a href="index.html">← Back to Home</a></p>
+<h3>Lynis audit & hardening review</h3>
+<p><strong>lynishardening.png</strong> — Lynis hardening audit results used to assess security posture after applying controls.</p>
+<img src="images/week7/lynishardening.png" alt="Lynis hardening audit results" width="900">
+
+<p><strong>psotlyniswarnings.png</strong> — Post-Lynis warnings/suggestions output used to identify remaining security gaps and improvements.</p>
+<img src="images/week7/psotlyniswarnings.png" alt="Post-Lynis warnings and suggestions" width="900">
+
+<p><strong>loopbacklynischeck.png</strong> — Lynis check confirming local/loopback networking configuration was detected during auditing.</p>
+<img src="images/week7/loopbacklynischeck.png" alt="Lynis loopback check" width="900">
+
+<h3>Service exposure & firewall validation</h3>
+<p><strong>nmapscan.png</strong> — Nmap port scan results showing exposed/listening ports after hardening (attack surface validation).</p>
+<img src="images/week7/nmapscan.png" alt="Nmap scan results" width="900">
+
+<p><strong>sudoufwverbose.png</strong> — UFW verbose status confirming firewall is enabled and rules are applied correctly.</p>
+<img src="images/week7/sudoufwverbose.png" alt="UFW verbose status" width="900">
+
+<h3>Accounts, services & mandatory access control</h3>
+<p><strong>whoamigroupcommands.png</strong> — User identity and group membership evidence supporting least-privilege configuration.</p>
+<img src="images/week7/whoamigroupcommands.png" alt="whoami and groups output" width="900">
+
+<p><strong>scsystemctlunitscheck.png</strong> — systemctl unit/service check confirming only required services are enabled/running.</p>
+<img src="images/week7/scsystemctlunitscheck.png" alt="systemctl units check" width="900">
+
+<p><strong>sudoaastatus7.png</strong> — AppArmor status output confirming profiles are loaded and enforcement state.</p>
+<img src="images/week7/sudoaastatus7.png" alt="AppArmor status" width="900">
+
+<h3>Rootkit scan</h3>
+<p><strong>rkhunterpopupd.png</strong> — rkhunter scan output used to check for rootkits or suspicious modifications.</p>
+<img src="images/week7/rkhunterpopupd.png" alt="rkhunter scan output" width="900">
 
 </body>
 </html>
