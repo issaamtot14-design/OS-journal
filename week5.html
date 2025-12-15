@@ -3,29 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <title>Week 5 – Advanced Security & Monitoring</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 0 16px; line-height: 1.6; color: #111; background: #fff; }
+    img { max-width: 100%; height: auto; display: block; margin: 10px 0; }
+    figure { margin: 24px 0; }
+    figcaption { font-size: 0.95em; color: #333; }
+    a { color: #0645ad; }
+    code { background: #f2f2f2; padding: 2px 4px; border-radius: 4px; }
+  </style>
 </head>
 <body>
 
-<h1>Week 5 – Advanced Security & Monitoring</h1>
+  <a href="index.html">← Back to Home</a>
 
-<p>
-This week focused on implementing advanced security controls and developing automation scripts.
-</p>
+  <h1>Week 5 – Advanced Security & Monitoring</h1>
 
-<h2>Key Implementations</h2>
-<ul>
-  <li>AppArmor access control</li>
-  <li>Fail2Ban intrusion detection</li>
-  <li>Automatic security updates</li>
-  <li>Security baseline verification script</li>
-  <li>Remote monitoring script</li>
-</ul>
+  <p>
+    Week 5 focused on implementing additional security controls and validating them using monitoring and audit checks.
+    Building on the SSH hardening completed in Week 4, the system was further protected through firewall enforcement,
+    mandatory access control (AppArmor), automatic security updates, and brute-force protection using Fail2ban.
+    The aim was to reduce attack surface, ensure consistent patching, and provide evidence that security controls
+    were active and functioning correctly.
+  </p>
 
-<p>
-<!-- Paste your Week 5 written content and script explanations here -->
-</p>
+  <h2>Key Activities</h2>
+  <ul>
+    <li><strong>Firewall:</strong> confirmed UFW was enabled and restricting access as intended.</li>
+    <li><strong>AppArmor:</strong> installed/verified AppArmor utilities and switched profiles into <em>enforce</em> mode.</li>
+    <li><strong>Automatic Updates:</strong> installed and configured <code>unattended-upgrades</code> to support automatic security patching.</li>
+    <li><strong>Brute-force Protection:</strong> installed Fail2ban, confirmed the service is active, and reviewed jail configuration/status.</li>
+    <li><strong>Security Monitoring:</strong> performed baseline/security checks and reviewed logs where applicable.</li>
+  </ul>
 
-<p><a href="index.html">← Back to Home</a></p>
+  <h2>Why these controls matter</h2>
+  <ul>
+    <li><strong>UFW (Firewall):</strong> blocks unsolicited access and limits which hosts/ports can reach the server.</li>
+    <li><strong>AppArmor:</strong> constrains what applications can do, reducing impact if a process is compromised.</li>
+    <li><strong>Unattended Upgrades:</strong> helps ensure security patches are applied automatically and consistently.</li>
+    <li><strong>Fail2ban:</strong> detects repeated failed logins and bans abusive IPs to slow/stop brute-force attempts.</li>
+  </ul>
+
+  <p>
+    The screenshots below provide evidence of the installation, configuration, and validation of these Week 5 controls.
+  </p>
+
+  <h2>Evidence Screenshots</h2>
+
+  <figure>
+    <img src="images/week5/ufw_enable.png" alt="UFW status enabled">
+    <figcaption>Firewall status (UFW active) showing SSH access allowed (restricted as configured).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/apparmorutils.png" alt="AppArmor packages installed">
+    <figcaption>AppArmor / AppArmor utilities installation status (packages installed and available).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/aa-enforce.png" alt="AppArmor profiles set to enforce">
+    <figcaption>Switching AppArmor profiles into <strong>enforce</strong> mode to actively restrict processes.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/apparmorstatus.png" alt="AppArmor status output">
+    <figcaption>AppArmor status output confirming profiles are loaded and enforcement is active.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/journalctl.png" alt="AppArmor journalctl check">
+    <figcaption>Log review check for AppArmor events using <code>journalctl</code> (evidence of log inspection).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/unatendedupdates.png" alt="Unattended upgrades installation">
+    <figcaption>Installation output for <code>unattended-upgrades</code> (automatic updates component).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/config unattended_upgradesscreen.png" alt="Unattended upgrades configuration prompt">
+    <figcaption>Unattended upgrades configuration screen (enabling automatic updates).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/conf50unattendedupgradespciture.png" alt="50unattended-upgrades configuration file">
+    <figcaption>Configuration file evidence (<code>/etc/apt/apt.conf.d/50unattended-upgrades</code>) showing update origins/settings.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/fail2ban_installpng.png" alt="Fail2ban installation output">
+    <figcaption>Fail2ban installation output (brute-force mitigation tool installed).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/fail2banstatus.png" alt="Fail2ban service status">
+    <figcaption>Fail2ban service status confirming it is active and running.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/fail2banstatus_jail.png" alt="Fail2ban jail status output">
+    <figcaption>Fail2ban client/jail status output showing which jail(s) are enabled and monitored.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/jail.png" alt="Fail2ban jail.local configuration snippet">
+    <figcaption>Jail configuration snippet (e.g., SSH jail parameters such as bantime/findtime/maxretry).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/securitybaselinescript.png" alt="Security baseline script output">
+    <figcaption>Security baseline script output summarising security posture checks and active protections.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/week5/monitorserver.png" alt="Remote monitoring / baseline report evidence">
+    <figcaption>Remote monitoring / baseline reporting evidence (system metrics and security checks gathered remotely).</figcaption>
+  </figure>
 
 </body>
 </html>
